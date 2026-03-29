@@ -1,0 +1,151 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Login - KriptoSchool{% endblock %}
+
+{% block body_class %}login-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row g-0 min-vh-100">
+        <!-- Left Column: Image/Branding -->
+        <div class="col-lg-7 d-none d-lg-block position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e3a8a 0%, #059669 100%);">
+            <div class="d-flex align-items-center justify-content-center h-100 text-white p-5 position-relative z-2">
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-mortarboard-fill display-1"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold mb-3">Welcome to KriptoSchool</h1>
+                    <p class="lead mb-4 opacity-75">The ultimate Multi-Tenant School Management System for Nigerian Schools</p>
+                    <div class="row g-3 justify-content-center">
+                        <div class="col-md-5">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-3 backdrop-blur">
+                                <i class="bi bi-people-fill text-warning fs-4 d-block mb-2"></i>
+                                <small>Manage Students & Teachers</small>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-3 backdrop-blur">
+                                <i class="bi bi-graph-up-arrow text-warning fs-4 d-block mb-2"></i>
+                                <small>Track Grades & Results</small>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-3 backdrop-blur">
+                                <i class="bi bi-calendar-event-fill text-warning fs-4 d-block mb-2"></i>
+                                <small>Assignments & Notes</small>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-3 backdrop-blur">
+                                <i class="bi bi-megaphone-fill text-warning fs-4 d-block mb-2"></i>
+                                <small>Real-time Announcements</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Elements -->
+            <div class="position-absolute top-0 start-0 translate-middle-n5 opacity-10">
+                <i class="bi bi-circle-fill" style="font-size: 25rem; color: white;"></i>
+            </div>
+            <div class="position-absolute bottom-0 end-0 translate-middle-y me-n5 opacity-10">
+                <i class="bi bi-circle-fill" style="font-size: 20rem; color: white;"></i>
+            </div>
+        </div>
+
+        <!-- Right Column: Login Form -->
+        <div class="col-lg-5 d-flex align-items-center justify-content-center bg-white p-4 p-lg-5">
+            <div class="w-100" style="max-width: 420px;">
+                <div class="text-center mb-4 d-lg-none">
+                    <i class="bi bi-mortarboard-fill display-4" style="color: #1e3a8a;"></i>
+                    <h2 class="fw-bold mt-2" style="color: #1e3a8a;">KriptoSchool</h2>
+                    <p class="text-muted small">Powered by Kripto Software</p>
+                </div>
+
+                <div class="d-none d-lg-block mb-5">
+                    <h2 class="fw-bold mb-2" style="color: #1e3a8a;">Sign In</h2>
+                    <p class="text-muted">Enter your credentials to access your dashboard</p>
+                </div>
+
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-{{ 'check-circle' if message.tags == 'success' else 'exclamation-triangle' }}-fill me-2"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="Username" required autofocus>
+                        <label for="username"><i class="bi bi-person me-2"></i>Username</label>
+                        <div class="invalid-feedback">Please enter your username</div>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password" required>
+                        <label for="password"><i class="bi bi-lock me-2"></i>Password</label>
+                        <div class="invalid-feedback">Please enter your password</div>
+                    </div>
+
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg py-3 shadow-sm" style="background-color: #1e3a8a; border: none;">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                        </button>
+                    </div>
+
+                    <div class="card bg-light border-0">
+                        <div class="card-body p-3">
+                            <small class="text-muted d-block mb-2 fw-semibold">Default Credentials:</small>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <code class="d-block bg-white p-2 rounded small">
+                                        <i class="bi bi-shield-check text-primary me-1"></i>
+                                        <strong>Super Admin:</strong> superadmin / password123
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <small class="text-muted d-block mb-1">Powered by</small>
+                    <h6 class="fw-bold mb-0" style="color: #1e3a8a;">Kripto Software</h6>
+                    <small class="text-muted">&copy; 2024 All Rights Reserved</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-page {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+    .form-control:focus {
+        border-color: #1e3a8a;
+        box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.25);
+    }
+    .btn-primary:hover {
+        background-color: #172c6b !important;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+    }
+    .backdrop-blur {
+        backdrop-filter: blur(10px);
+    }
+    .translate-middle-n5 {
+        transform: translate(-50%, -50%);
+    }
+</style>
+{% endblock %}

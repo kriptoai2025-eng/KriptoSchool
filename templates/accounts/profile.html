@@ -1,0 +1,175 @@
+{% extends 'base/dashboard_base.html' %}
+
+{% block dashboard_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="stat-card">
+            <h4 class="mb-4"><i class="bi bi-person-circle me-2"></i>My Profile</h4>
+            
+            <div class="row g-4">
+                <!-- Profile Picture Section -->
+                <div class="col-md-4 text-center">
+                    <div class="mb-3">
+                        {% if user_role == 'superadmin' and user.superadmin_profile.profile_picture %}
+                            <img src="{{ user.superadmin_profile.profile_picture.url }}" alt="Profile" class="rounded-circle" width="150" height="150" style="object-fit: cover; border: 4px solid var(--primary-color);">
+                        {% elif user_role == 'schooladmin' and user.schooladmin_profile.profile_picture %}
+                            <img src="{{ user.schooladmin_profile.profile_picture.url }}" alt="Profile" class="rounded-circle" width="150" height="150" style="object-fit: cover; border: 4px solid var(--primary-color);">
+                        {% elif user_role == 'teacher' and user.teacher_profile.profile_picture %}
+                            <img src="{{ user.teacher_profile.profile_picture.url }}" alt="Profile" class="rounded-circle" width="150" height="150" style="object-fit: cover; border: 4px solid var(--primary-color);">
+                        {% elif user_role == 'student' and user.student_profile.profile_picture %}
+                            <img src="{{ user.student_profile.profile_picture.url }}" alt="Profile" class="rounded-circle" width="150" height="150" style="object-fit: cover; border: 4px solid var(--primary-color);">
+                        {% else %}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto" style="width: 150px; height: 150px; font-size: 3rem; border: 4px solid var(--secondary-color);">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted small">Click to upload a new photo</p>
+                </div>
+                
+                <!-- Profile Form Section -->
+                <div class="col-md-8">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email Address</label>
+                                {{ user_form.email }}
+                                {% if user_form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ user_form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                                <small class="text-muted">Username cannot be changed</small>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label for="profile_picture" class="form-label">Profile Picture</label>
+                                <input type="file" class="form-control" name="profile_picture" id="profile_picture" accept="image/*">
+                                <small class="text-muted">Accepted formats: JPG, PNG (Max 2MB)</small>
+                            </div>
+                            
+                            <!-- Role-specific information -->
+                            {% if user_role == 'teacher' %}
+                            <div class="col-md-6">
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" class="form-control" value="{{ user.teacher_profile.employee_id }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" value="{{ user.teacher_profile.phone_number }}" disabled>
+                            </div>
+                            {% elif user_role == 'student' %}
+                            <div class="col-md-6">
+                                <label class="form-label">Student ID</label>
+                                <input type="text" class="form-control" value="{{ user.student_profile.student_id }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Class</label>
+                                <input type="text" class="form-control" value="{{ user.student_profile.class_enrolled.name|default:'Not Assigned' }}" disabled>
+                            </div>
+                            {% elif user_role == 'schooladmin' %}
+                            <div class="col-md-6">
+                                <label class="form-label">School</label>
+                                <input type="text" class="form-control" value="{{ user.schooladmin_profile.school.name }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" value="{{ user.schooladmin_profile.phone_number }}" disabled>
+                            </div>
+                            {% elif user_role == 'superadmin' %}
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" value="{{ user.superadmin_profile.phone_number }}" disabled>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-4 d-flex gap-3">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Information -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h5 class="mb-4"><i class="bi bi-shield-lock me-2"></i>Account Information</h5>
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <td class="text-muted">Account Type:</td>
+                    <td><strong>{{ user_role|title }}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Member Since:</td>
+                    <td>{{ user.date_joined|date:"F d, Y" }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Last Login:</td>
+                    <td>{{ user.last_login|date:"F d, Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Account Status:</td>
+                    <td><span class="badge bg-success">Active</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h5 class="mb-4"><i class="bi bi-key me-2"></i>Security</h5>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-lock me-2"></i>Change Password
+                    </div>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-phone me-2"></i>Two-Factor Authentication
+                    </div>
+                    <span class="badge bg-secondary">Not Enabled</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="bi bi-clock-history me-2"></i>Login History
+                    </div>
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
