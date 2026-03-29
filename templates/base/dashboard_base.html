@@ -18,17 +18,17 @@
     <nav class="sidebar-menu">
         <!-- Common Dashboard Link -->
         {% if user_role == 'superadmin' %}
-            <a href="{% url 'superadmin_dashboard' %}" class="sidebar-menu-item active">
+            <a href="{% url 'superadmin_dashboard' %}" class="sidebar-menu-item {% if request.resolver_match.url_name == 'superadmin_dashboard' %}active{% endif %}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="{% url 'school_list' %}" class="sidebar-menu-item {% if 'school' in request.resolver_match.url_name and 'register' not in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-building"></i>
                 <span>Schools</span>
             </a>
             
-            <a href="{% url 'school_register' %}" class="sidebar-menu-item">
+            <a href="{% url 'school_register' %}" class="sidebar-menu-item {% if request.resolver_match.url_name == 'school_register' %}active{% endif %}">
                 <i class="bi bi-plus-circle"></i>
                 <span>Register School</span>
             </a>
@@ -44,94 +44,94 @@
             </a>
             
         {% elif user_role == 'schooladmin' %}
-            <a href="{% url 'schooladmin_dashboard' %}" class="sidebar-menu-item active">
+            <a href="{% url 'schooladmin_dashboard' %}" class="sidebar-menu-item {% if request.resolver_match.url_name == 'schooladmin_dashboard' %}active{% endif %}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'teacher' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-person-badge"></i>
                 <span>Teachers</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'student' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-people"></i>
                 <span>Students</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'class' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-collection"></i>
                 <span>Classes</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'announcement' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-megaphone"></i>
                 <span>Announcements</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'setting' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-gear"></i>
                 <span>School Settings</span>
             </a>
             
         {% elif user_role == 'teacher' %}
-            <a href="{% url 'teacher_dashboard' %}" class="sidebar-menu-item active">
+            <a href="{% url 'teacher_dashboard' %}" class="sidebar-menu-item {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'class' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-collection"></i>
                 <span>My Classes</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'assignment' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-clipboard-check"></i>
                 <span>Assignments</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'note' in request.resolver_match.url_name or 'resource' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-file-earmark-arrow-up"></i>
                 <span>Notes</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'grade' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-graph-up"></i>
                 <span>Gradebook</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'student' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-people"></i>
                 <span>Students</span>
             </a>
             
         {% elif user_role == 'student' %}
-            <a href="{% url 'student_dashboard' %}" class="sidebar-menu-item active">
+            <a href="{% url 'student_dashboard' %}" class="sidebar-menu-item {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'announcement' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-megaphone"></i>
                 <span>Announcements</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'assignment' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-clipboard-check"></i>
                 <span>Assignments</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'material' in request.resolver_match.url_name or 'note' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-book"></i>
                 <span>Study Materials</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'result' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-graph-up"></i>
                 <span>My Results</span>
             </a>
             
-            <a href="#" class="sidebar-menu-item">
+            <a href="#" class="sidebar-menu-item {% if 'calendar' in request.resolver_match.url_name %}active{% endif %}">
                 <i class="bi bi-calendar-event"></i>
                 <span>School Calendar</span>
             </a>

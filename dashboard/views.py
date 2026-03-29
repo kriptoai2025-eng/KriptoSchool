@@ -267,3 +267,119 @@ def student_dashboard(request):
     }
     
     return render(request, 'dashboard/student/dashboard.html', context)
+
+
+# Super Admin - School Management Views
+@login_required
+def school_list(request):
+    """List all schools for Super Admin"""
+    if not hasattr(request.user, 'superadmin_profile'):
+        messages.error(request, 'Access denied.')
+        return redirect('dashboard')
+    
+    schools = School.objects.all().select_related('registered_by__user').order_by('-date_registered')
+    
+    # Search and filter
+    search_query = request.GET.get('search', '')
+    state_filter = request.GET.get('state', '')
+    status_filter = request.GET.get('status', '')
+    
+    if search_query:
+        schools = schools.filter(Q(name__icontains=search_query) | Q(registration_number__icontains=search_query))
+    
+    if state_filter:
+        schools = schools.filter(state=state_filter)
+    
+    if status_filter:
+        schools = schools.filter(is_active=(status_filter == 'active'))
+    
+    # Get unique states for filter dropdown
+    states = School.objects.values_list('state', flat=True).distinct()
+    
+    context = {
+        'schools': schools,
+        'states': states,
+        'page_title': 'Manage Schools',
+        'user_role': 'superadmin',
+        'search_query': search_query,
+        'state_filter': state_filter,
+        'status_filter': status_filter,
+    }
+    
+    return render(request, 'dashboard/superadmin/school_list.html', context)
+
+
+@login_required
+def school_detail(request, school_id):
+    """View school details"""
+    if not hasattr(request.user, 'superadmin_profile'):
+        messages.error(request, 'Access denied.')
+        return redirect('dashboard')
+    
+    school = get_object_or_404(School, id=school_id)
+    teachers = Teacher.objects.filter(school=school, is_active=True)
+    students = Student.objects.filter(school=school, is_active=True)
+    classes = Class.objects.filter(school=school, is_active=True)
+    
+    context = {
+        'school': school,
+        'teachers': teachers,
+        'students': students,
+        'classes': classes,
+        'page_title': school.name,
+        'user_role': 'superadmin',
+    }
+    
+    return render(request, 'dashboard/superadmin/school_detail.html', context)
+
+
+@login_required
+def school_edit(request, school_id):
+    """Edit school details"""
+    if not hasattr(request.user, 'superadmin_profile'):
+        messages.error(request, 'Access denied.')
+        return redirect('dashboard')
+    
+    school = get_object_or_404(School, id=school_id)
+    
+    if request.method == 'POST':
+        form = SchoolRegistrationForm(request.POST, request.FILES, instance=school)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'School "{school.name}" updated successfully!')
+            return redirect('school_detail', school_id=school.id)
+    else:
+        form = SchoolRegistrationForm(instance=school)
+    
+    context = {
+        'form': form,
+        'school': school,
+        'page_title': f'Edit {school.name}',
+        'user_role': 'superadmin',
+    }
+    
+    return render(request, 'dashboard/superadmin/school_form.html', context)
+
+
+@login_required
+def school_delete(request, school_id):
+    """Delete a school"""
+    if not hasattr(request.user, 'superadmin_profile'):
+        messages.error(request, 'Access denied.')
+        return redirect('dashboard')
+    
+    school = get_object_or_404(School, id=school_id)
+    
+    if request.method == 'POST':
+        school_name = school.name
+        school.delete()
+        messages.success(request, f'School "{school_name}" deleted successfully!')
+        return redirect('school_list')
+    
+    context = {
+        'school': school,
+        'page_title': f'Delete {school.name}',
+        'user_role': 'superadmin',
+    }
+    
+    return render(request, 'dashboard/superadmin/school_confirm_delete.html', context)
